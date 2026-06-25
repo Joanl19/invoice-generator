@@ -253,22 +253,22 @@
         <h3><i class="fas fa-pen-to-square"></i> Edit Invoice</h3>
 
         <div class="edit-group">
-            <div class="edit-field"><label>Customer Name</label><input id="edtCustomer" value="Mr. Amit Tanwar" /></div>
-            <div class="edit-field"><label>Phone</label><input id="edtPhone" value="9350003572" /></div>
-            <div class="edit-field"><label>Email</label><input id="edtEmail" value="tanwar.amit903@gmail.com" /></div>
-            <div class="edit-field"><label>Address</label><input id="edtAddress" value="New Delhi, India" /></div>
+            <div class="edit-field"><label>Customer Name</label><input id="edtCustomer" placeholder="Enter Customer Name" /></div>
+            <div class="edit-field"><label>Phone</label><input id="edtPhone" placeholder="Enter Phone Number" /></div>
+            <div class="edit-field"><label>Email</label><input id="edtEmail" placeholder="Enter Email Address" /></div>
+            <div class="edit-field"><label>Address</label><input id="edtAddress" placeholder="Enter Address" /></div>
         </div>
 
         <div class="edit-group full">
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.8rem;">
-                <div class="edit-field"><label>Travel From</label><input id="edtDateFrom" type="date" value="2026-06-15" /></div>
-                <div class="edit-field"><label>Travel To</label><input id="edtDateTo" type="date" value="2026-06-21" /></div>
-                <div class="edit-field"><label>Invoice Date</label><input id="edtInvoiceDate" type="date" value="2026-06-05" /></div>
-                <div class="edit-field"><label>Due Date</label><input id="edtDueDate" type="date" value="2026-06-12" /></div>
-                <div class="edit-field"><label>Travelers</label><input id="edtTravelers" value="2 Adults" /></div>
-                <div class="edit-field"><label>Pickup Point</label><input id="edtPickup" value="Delhi" /></div>
-                <div class="edit-field"><label>Room Sharing</label><input id="edtRoom" value="Double Sharing" /></div>
-                <div class="edit-field"><label>Invoice No.</label><input id="edtInvoiceNo" value="INV-2048" /></div>
+                <div class="edit-field"><label>Travel From</label><input id="edtDateFrom" type="date"  /></div>
+                <div class="edit-field"><label>Travel To</label><input id="edtDateTo" type="date"  /></div>
+                <div class="edit-field"><label>Invoice Date</label><input id="edtInvoiceDate" type="date"  /></div>
+                <div class="edit-field"><label>Due Date</label><input id="edtDueDate" type="date"  /></div>
+                <div class="edit-field"><label>Travelers</label><input id="edtTravelers" placeholder="Enter Number of Travelers" /></div>
+                <div class="edit-field"><label>Pickup Point</label><input id="edtPickup" placeholder="Enter Pickup Point" /></div>
+                <div class="edit-field"><label>Room Sharing</label><input id="edtRoom" placeholder="Enter Room Sharing Details" /></div>
+                <div class="edit-field"><label>Invoice No.</label><input id="edtInvoiceNo" placeholder="Enter Invoice Number" /></div>
             </div>
         </div>
 
@@ -281,16 +281,16 @@
         </div>
 
         <div class="edit-group" style="margin-top:0.5rem;">
-            <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number" value="100" step="5" /></div>
-            <div class="edit-field"><label>Discount (₹)</label><input id="edtDiscount" type="number" value="0" step="5" /></div>
+            <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number"  step="5" /></div>
+            <div class="edit-field"><label>Discount (₹)</label><input id="edtDiscount" type="number"  step="5" /></div>
         </div>
 
         <div class="payment-method-edit">
             <div style="font-weight:600; color:#0b2a3e; margin-bottom:0.5rem;"><i class="fas fa-credit-card"></i> Payment Method</div>
-            <div class="edit-field"><label>UPI ID</label><input id="edtUPI" value="kishoritravels@upi" /></div>
-            <div class="edit-field"><label>Bank Name</label><input id="edtBankName" value="HDFC Bank" /></div>
-            <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" value="1234 5678 9010 11" /></div>
-            <div class="edit-field"><label>IFSC</label><input id="edtIFSC" value="HDFC0001234" /></div>
+            <div class="edit-field"><label>UPI ID</label><input id="edtUPI" placeholder="Enter UPI ID" /></div>
+            <div class="edit-field"><label>Bank Name</label><input id="edtBankName" placeholder="Enter Bank Name" /></div>
+            <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" placeholder="Enter Account Number" /></div>
+            <div class="edit-field"><label>IFSC</label><input id="edtIFSC" placeholder="Enter IFSC Code" /></div>
             <div class="edit-field"><label>Status</label>
                 <select id="edtPaymentStatus">
                     <option value="Partially Paid" selected>Partially Paid</option>
@@ -415,12 +415,7 @@
 <script>
 (function() {
     const DEFAULT_ITEMS = [
-        { desc: 'Manali', qty: '1 Night', rate: 45, amount: 45 },
-        { desc: 'Kasol', qty: '1 Night', rate: 40, amount: 40 },
-        { desc: 'Jibhi', qty: '1 Night', rate: 18, amount: 18 },
-        { desc: 'Barot', qty: '2 Nights', rate: 22, amount: 44 },
-        { desc: 'MAP (Food)', qty: '1', rate: 55, amount: 55 },
-        { desc: 'Transport (Delhi to Delhi)', qty: '1', rate: 75, amount: 75 }
+        { desc: '', qty: '', rate: 0, amount: 0 },
     ];
 
     // DOM REFS
