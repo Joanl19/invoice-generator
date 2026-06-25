@@ -165,6 +165,10 @@
             margin-bottom: 0.4rem;
         }
 
+        /* Hide/Show for Payment Method */
+        .online-fields { display: block; }
+        .online-fields.hidden { display: none; }
+
         /* ---------- INVOICE PREVIEW - SCREEN ---------- */
         .preview {
             background: white;
@@ -198,7 +202,6 @@
         #invoiceContent th { background: #e3edf5; color: #1a4057; font-weight: 600; padding: 0.4rem 0.6rem; text-align: left; }
         #invoiceContent th.text-center { text-align: center; }
         #invoiceContent td { padding: 0.35rem 0.6rem; border-bottom: 1px solid #e9f0f6; }
-        /* ---------- FIX: Center align RATE and AMOUNT columns ---------- */
         #invoiceContent td.text-center { text-align: center; }
         #invoiceContent td.text-right { text-align: right; }
         #invoiceContent .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #fafdff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin: 0.6rem 0; }
@@ -237,12 +240,71 @@
             padding-bottom: 0.6rem;
             margin-bottom: 0.6rem;
         }
-        .brand h1 i { color: #2a7faa; }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 20%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid #0b2a3e;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .brand h1 { font-size: 22px; color: #0b2a3e; }
+        .brand h1 i { color: #2a7faa; }
         .brand .tagline { font-size: 11px; color: #4b5e6b; }
+        .brand .tagline i { color: #2a7faa; }
+
         .company-details { text-align: right; line-height: 1.5; color: #1f3a4b; }
         .company-details div { font-size: 11px; }
         .company-details .gst { background: #e9f0f5; padding: 0.1rem 0.6rem; border-radius: 40px; display: inline-block; font-size: 10px; }
+
+        /* Cash payment highlight */
+        .cash-payment {
+            background: #e8f5e9;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #1e7e5c;
+            display: inline-block;
+            font-size: 12px;
+        }
+
+        /* GST badge */
+        .gst-badge {
+            background: #e3edf5;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #1a4057;
+            display: inline-block;
+        }
+        
+        .booking-id-badge {
+            background: #0b2a3e;
+            color: white;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Hide ONLY payment summary column, NOT the entire payment grid */
+        .summary-column-hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -272,6 +334,13 @@
             </div>
         </div>
 
+        <!-- Booking ID -->
+        <div class="edit-group full">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+                <div class="edit-field"><label>Booking ID</label><input id="edtBookingId" placeholder="Enter Booking ID" /></div>
+            </div>
+        </div>
+
         <div class="item-editor">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
                 <span style="font-weight:600; color:#0b2a3e;"><i class="fas fa-list"></i> Items</span>
@@ -281,17 +350,44 @@
         </div>
 
         <div class="edit-group" style="margin-top:0.5rem;">
-            <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number"  step="5" /></div>
-            <div class="edit-field"><label>Discount (₹)</label><input id="edtDiscount" type="number"  step="5" /></div>
+            <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number" step="5" /></div>
+            <div class="edit-field">
+                <label>Discount (%)</label>
+                <input id="edtDiscount" type="number" step="1" placeholder="Enter discount %" />
+            </div>
         </div>
 
+        <!-- PAYMENT METHOD EDITOR WITH CASH/ONLINE TOGGLE -->
         <div class="payment-method-edit">
             <div style="font-weight:600; color:#0b2a3e; margin-bottom:0.5rem;"><i class="fas fa-credit-card"></i> Payment Method</div>
-            <div class="edit-field"><label>UPI ID</label><input id="edtUPI" placeholder="Enter UPI ID" /></div>
-            <div class="edit-field"><label>Bank Name</label><input id="edtBankName" placeholder="Enter Bank Name" /></div>
-            <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" placeholder="Enter Account Number" /></div>
-            <div class="edit-field"><label>IFSC</label><input id="edtIFSC" placeholder="Enter IFSC Code" /></div>
-            <div class="edit-field"><label>Status</label>
+            
+            <div class="edit-field">
+                <label>Payment Type</label>
+                <select id="edtPaymentType">
+                    <option value="online" selected>Online</option>
+                    <option value="cash">Cash</option>
+                </select>
+            </div>
+
+            <!-- Online Payment Fields with GST -->
+            <div id="onlineFields" class="online-fields">
+                <div class="edit-field"><label>UPI ID</label><input id="edtUPI" placeholder="Enter UPI ID" /></div>
+                <div class="edit-field"><label>Bank Name</label><input id="edtBankName" placeholder="Enter Bank Name" /></div>
+                <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" placeholder="Enter Account Number" /></div>
+                <div class="edit-field"><label>IFSC</label><input id="edtIFSC" placeholder="Enter IFSC Code" /></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+                    <div class="edit-field"><label>GST Rate (%)</label><input id="edtGSTRate" type="number" value="18" step="1" /></div>
+                    <div class="edit-field"><label>GST Amount (₹)</label><input id="edtGSTAmount" type="number" step="1" readonly style="background:#eef3f8; cursor:not-allowed;" /></div>
+                </div>
+            </div>
+
+            <!-- Cash Payment Fields (only amount) -->
+            <div id="cashFields" class="online-fields hidden">
+                <div class="edit-field"><label>Cash Amount (₹)</label><input id="edtCashAmount" type="number" placeholder="Enter Cash Amount" step="100" /></div>
+            </div>
+
+            <div class="edit-field" style="margin-top:0.4rem;">
+                <label>Payment Status</label>
                 <select id="edtPaymentStatus">
                     <option value="Partially Paid" selected>Partially Paid</option>
                     <option value="Paid">Paid</option>
@@ -312,16 +408,22 @@
     <div class="preview" id="invoicePreview">
         <div id="invoiceContent">
 
-            <!-- HEADER -->
+            <!-- HEADER with LOGO -->
             <div class="brand-row">
                 <div class="brand">
-                    <h1><i class="fas fa-plane-departure"></i> KISHORI TRAVELS</h1>
-                    <div class="tagline"><i class="fas fa-map-pin"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
+                    <div class="brand-logo">
+                        <img src="images/logo.jpg" alt="Kishori Travels Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:20px;font-weight:700;color:#0b2a3e;>KT</span>';" />
+                    </div>
+                    <div>
+                        <h1>KISHORI TRAVELS</h1>
+                        <div class="tagline"><i class="fas fa-map-pin"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
+                    </div>
                 </div>
                 <div class="company-details">
                     <div><i class="fas fa-phone-alt"></i> +91 9540680005</div>
                     <div><i class="fas fa-envelope"></i> kishoritravel@gmail.com</div>
                     <div><i class="fas fa-globe"></i> www.kishoritravels.com</div>
+                    <div class="gst"><i class="fas fa-receipt"></i> GSTIN: 07AAECK1234F1Z5</div>
                 </div>
             </div>
 
@@ -335,7 +437,7 @@
                 </div>
             </div>
 
-            <!-- BILL TO + TRIP -->
+            <!-- BILL TO + TRIP (Booking ID in Trip Details) -->
             <div class="info-grid">
                 <div>
                     <h4><i class="fas fa-user-circle"></i> BILL TO</h4>
@@ -346,6 +448,7 @@
                 </div>
                 <div>
                     <h4><i class="fas fa-route"></i> TRIP DETAILS</h4>
+                    <div class="trip-line"><span>Booking ID</span><span  id="previewBookingId"></span></div>
                     <div class="trip-line"><span>Travel Date</span><span><span id="previewDateFrom">15/06/2026</span> to <span id="previewDateTo">21/06/2026</span></span></div>
                     <div class="trip-line"><span>Travelers</span><span id="previewTravelers">2 Adults</span></div>
                     <div class="trip-line"><span>Pickup</span><span id="previewPickup">Delhi</span></div>
@@ -353,7 +456,7 @@
                 </div>
             </div>
 
-            <!-- TABLE - FIXED: Rate and Amount columns now center aligned -->
+            <!-- TABLE -->
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -368,25 +471,37 @@
                 </table>
             </div>
 
-            <!-- PAYMENT -->
-            <div class="payment-grid">
-                <div>
+            <!-- PAYMENT - Only Summary column hides for Cash, Payment Method stays visible -->
+            <div class="payment-grid" id="paymentGrid">
+                <!-- Payment Summary Column - hides for Cash -->
+                <div id="summaryColumn">
                     <h4>PAYMENT SUMMARY</h4>
-                    <div class="summary-line"><span>Package Cost</span><span id="previewPkgCost">₹277.00</span></div>
-                    <div class="summary-line"><span>Discount</span><span id="previewDiscount">₹0.00</span></div>
-                    <div class="summary-line"><span>Net Amount</span><span id="previewNet">₹277.00</span></div>
-                    <div class="summary-line"><span>Advance Received</span><span id="previewAdvance">₹100.00</span></div>
-                    <div class="summary-line balance"><span>Balance Due</span><span class="balance-due" id="previewBalance">₹177.00</span></div>
+                    <div class="summary-line"><span>Package Cost</span><span id="previewPkgCost">₹0.00</span></div>
+                    <div class="summary-line"><span>Discount</span><span id="previewDiscount">0%</span></div>
+                    <div class="summary-line"><span>Net Amount</span><span id="previewNet">₹0.00</span></div>
+                    <div class="summary-line" id="gstSummaryLine"><span>GST (<span id="previewGSTRateLabel">18</span>%)</span><span id="previewGSTAmount">₹0.00</span></div>
+                    <div class="summary-line"><span>Total with GST</span><span id="previewTotalWithGST">₹0.00</span></div>
+                    <div class="summary-line"><span>Advance Received</span><span id="previewAdvance">₹0.00</span></div>
+                    <div class="summary-line balance"><span>Balance Due</span><span class="balance-due" id="previewBalance">₹0.00</span></div>
                 </div>
+                <!-- Payment Method Column - Always visible -->
                 <div>
                     <h4>PAYMENT METHOD</h4>
-                    <div style="font-weight:500; font-size:12px;" id="previewUPI">UPI: kishoritravels@upi</div>
-                    <div style="background:#eef5fa; padding:0.3rem 0.8rem; border-radius:30px; margin:4px 0; font-size:11px;">
-                        <span id="previewBankName">HDFC Bank</span><br>
-                        A/C: <span id="previewAccountNo">1234 5678 9010 11</span><br>
-                        IFSC: <span id="previewIFSC">HDFC0001234</span>
+                    <div id="previewPaymentMethod">
+                        <div style="font-weight:500; font-size:12px;" id="previewUPI">UPI: </div>
+                        <div style="background:#eef5fa; padding:0.3rem 0.8rem; border-radius:30px; margin:4px 0; font-size:11px;" id="previewBankDetails">
+                           Bank: <span id="previewBankName"></span><br>
+                            A/C: <span id="previewAccountNo"></span><br>
+                            IFSC: <span id="previewIFSC"></span>
+                        </div>
+                        <div style="margin-top:2px; font-size:10px; color:#1a4057;">
+                            <span class="gst-badge"><i class="fas fa-percent"></i> GST: <span id="previewGSTRateDisplay">18</span>%</span>
+                        </div>
                     </div>
-                    <div><span class="payment-status" id="previewPaymentStatus"><i class="fas fa-clock"></i> Partially Paid</span></div>
+                    <div id="previewCashMethod" class="cash-payment" style="display:none;">
+                        <i class="fas fa-money-bill-wave"></i> Cash Payment
+                    </div>
+                    <div style="margin-top:4px;"><span class="payment-status" id="previewPaymentStatus"><i class="fas fa-clock"></i> Partially Paid</span></div>
                 </div>
             </div>
 
@@ -438,6 +553,14 @@
     const edtAccountNo = document.getElementById('edtAccountNo');
     const edtIFSC = document.getElementById('edtIFSC');
     const edtPaymentStatus = document.getElementById('edtPaymentStatus');
+    const edtPaymentType = document.getElementById('edtPaymentType');
+    const edtCashAmount = document.getElementById('edtCashAmount');
+    const edtBookingId = document.getElementById('edtBookingId');
+    const edtGSTRate = document.getElementById('edtGSTRate');
+    const edtGSTAmount = document.getElementById('edtGSTAmount');
+
+    const onlineFields = document.getElementById('onlineFields');
+    const cashFields = document.getElementById('cashFields');
 
     const itemsContainer = document.getElementById('itemsContainer');
     const addItemBtn = document.getElementById('addItemBtn');
@@ -468,6 +591,14 @@
     const previewAccountNo = document.getElementById('previewAccountNo');
     const previewIFSC = document.getElementById('previewIFSC');
     const previewPaymentStatus = document.getElementById('previewPaymentStatus');
+    const previewPaymentMethod = document.getElementById('previewPaymentMethod');
+    const previewCashMethod = document.getElementById('previewCashMethod');
+    const previewBookingId = document.getElementById('previewBookingId');
+    const previewGSTRateLabel = document.getElementById('previewGSTRateLabel');
+    const previewGSTAmount = document.getElementById('previewGSTAmount');
+    const previewTotalWithGST = document.getElementById('previewTotalWithGST');
+    const previewGSTRateDisplay = document.getElementById('previewGSTRateDisplay');
+    const summaryColumn = document.getElementById('summaryColumn');
 
     let items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
 
@@ -483,6 +614,33 @@
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
         return `${day}/${month}/${year}`;
+    }
+
+    function calculateGST() {
+        const rate = parseFloat(edtGSTRate.value) || 0;
+        collectItemsFromEditor();
+        let total = 0;
+        items.forEach(item => { total += (item.amount || 0); });
+        const discountPercent = parseFloat(edtDiscount.value) || 0;
+        const discount = (total * discountPercent) / 100;
+        const net = Math.max(0, total - discount);
+        const gstAmount = (net * rate) / 100;
+        edtGSTAmount.value = gstAmount.toFixed(2);
+        return { total, discount, net, gstAmount, rate };
+    }
+
+    function togglePaymentFields() {
+        const paymentType = edtPaymentType.value;
+        if (paymentType === 'online') {
+            onlineFields.classList.remove('hidden');
+            cashFields.classList.add('hidden');
+            summaryColumn.classList.remove('summary-column-hidden');
+        } else {
+            onlineFields.classList.add('hidden');
+            cashFields.classList.remove('hidden');
+            summaryColumn.classList.add('summary-column-hidden');
+        }
+        updatePreview();
     }
 
     function renderItemEditor() {
@@ -517,8 +675,8 @@
         const rows = itemsContainer.querySelectorAll('.item-row');
         const newItems = [];
         rows.forEach(row => {
-            const desc = row.querySelector('.item-desc').value || 'Item';
-            const qty = row.querySelector('.item-qty').value || '1';
+            const desc = row.querySelector('.item-desc').value || '';
+            const qty = row.querySelector('.item-qty').value || '0';
             const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
             newItems.push({ desc, qty, rate, amount: rate });
         });
@@ -528,26 +686,30 @@
     function updatePreview() {
         collectItemsFromEditor();
 
-        const customer = edtCustomer.value || 'Customer';
+        const customer = edtCustomer.value || 'Customer Name';
         const phone = edtPhone.value || '';
         const email = edtEmail.value || '';
         const address = edtAddress.value || '';
         const dateFrom = formatDate(edtDateFrom.value);
         const dateTo = formatDate(edtDateTo.value);
         const travelers = edtTravelers.value || '0';
-        const pickup = edtPickup.value || 'Pickup';
-        const room = edtRoom.value || 'Sharing';
+        const pickup = edtPickup.value || '';
+        const room = edtRoom.value || '';
         const invNo = edtInvoiceNo.value || 'INV-0000';
         const invDate = formatDate(edtInvoiceDate.value);
         const dueDate = formatDate(edtDueDate.value);
         const advance = parseFloat(edtAdvance.value) || 0;
-        const discount = parseFloat(edtDiscount.value) || 0;
+        const discountPercent = parseFloat(edtDiscount.value) || 0;
+        const bookingId = edtBookingId.value || '';
 
-        const upi = edtUPI.value || 'upi@pay';
-        const bankName = edtBankName.value || 'Bank Name';
-        const accountNo = edtAccountNo.value || '0000 0000 0000 00';
-        const ifsc = edtIFSC.value || 'IFSC0000000';
+        const paymentType = edtPaymentType.value;
+        const upi = edtUPI.value || '';
+        const bankName = edtBankName.value || '';
+        const accountNo = edtAccountNo.value || '';
+        const ifsc = edtIFSC.value || '';
+        const cashAmount = edtCashAmount.value || '0';
         const paymentStatus = edtPaymentStatus.value || 'Partially Paid';
+        const gstRate = parseFloat(edtGSTRate.value) || 0;
 
         previewCustomer.textContent = customer;
         previewPhone.innerHTML = `<i class="fas fa-phone"></i> ${phone}`;
@@ -561,8 +723,9 @@
         previewInvoiceNo.textContent = invNo;
         previewInvoiceDate.textContent = invDate;
         previewDueDate.textContent = dueDate;
+        previewBookingId.innerHTML = `<i class=""></i> ${bookingId}`;
 
-        // TABLE - Rate and Amount columns center aligned
+        // TABLE
         previewItemsBody.innerHTML = '';
         let total = 0;
         items.forEach(item => {
@@ -578,51 +741,79 @@
             previewItemsBody.appendChild(tr);
         });
 
+        const discount = (total * discountPercent) / 100;
         const net = Math.max(0, total - discount);
-        const balance = Math.max(0, net - advance);
+        const gstAmount = (net * gstRate) / 100;
+        const totalWithGST = net + gstAmount;
+        const balance = Math.max(0, totalWithGST - advance);
+
+        // Summary column values (only visible for Online)
         previewPkgCost.textContent = currency(total);
-        previewDiscount.textContent = currency(discount);
+        previewDiscount.textContent = discountPercent + '%';
         previewNet.textContent = currency(net);
         previewAdvance.textContent = currency(advance);
         previewBalance.textContent = currency(balance);
+        previewGSTRateLabel.textContent = gstRate;
+        previewGSTAmount.textContent = currency(gstAmount);
+        previewTotalWithGST.textContent = currency(totalWithGST);
+        previewGSTRateDisplay.textContent = gstRate;
 
-        previewUPI.textContent = `UPI: ${upi}`;
-        previewBankName.textContent = bankName;
-        previewAccountNo.textContent = accountNo;
-        previewIFSC.textContent = ifsc;
+        // Payment Method - Always visible
+        if (paymentType === 'online') {
+            previewPaymentMethod.style.display = 'block';
+            previewCashMethod.style.display = 'none';
+            previewUPI.textContent = upi ? `UPI: ${upi}` : 'UPI Id: ';
+            previewBankName.textContent = bankName;
+            previewAccountNo.textContent = accountNo;
+            previewIFSC.textContent = ifsc;
+        } else {
+            previewPaymentMethod.style.display = 'none';
+            previewCashMethod.style.display = 'inline-block';
+            const cashAmt = parseFloat(cashAmount) || 0;
+            previewCashMethod.innerHTML = `<i class="fas fa-money-bill-wave"></i> Cash Payment: ${currency(cashAmt)}`;
+        }
+
         const statusIcon = paymentStatus === 'Paid' ? 'fa-check-circle' : 
                           paymentStatus === 'Unpaid' ? 'fa-times-circle' : 'fa-clock';
         previewPaymentStatus.innerHTML = `<i class="fas ${statusIcon}"></i> ${paymentStatus}`;
+        
+        edtGSTAmount.value = gstAmount.toFixed(2);
     }
 
     function resetToDefault() {
-        edtCustomer.value = 'Mr. Amit Tanwar';
-        edtPhone.value = '9350003572';
-        edtEmail.value = 'tanwar.amit903@gmail.com';
-        edtAddress.value = 'New Delhi, India';
-        edtDateFrom.value = '2026-06-15';
-        edtDateTo.value = '2026-06-21';
-        edtTravelers.value = '2 Adults';
-        edtPickup.value = 'Delhi';
-        edtRoom.value = 'Double Sharing';
-        edtInvoiceNo.value = 'INV-2048';
-        edtInvoiceDate.value = '2026-06-05';
-        edtDueDate.value = '2026-06-12';
-        edtAdvance.value = '100';
-        edtDiscount.value = '0';
-        edtUPI.value = 'kishoritravels@upi';
-        edtBankName.value = 'HDFC Bank';
-        edtAccountNo.value = '1234 5678 9010 11';
-        edtIFSC.value = 'HDFC0001234';
+        edtCustomer.value = '';
+        edtPhone.value = '';
+        edtEmail.value = '';
+        edtAddress.value = '';
+        edtDateFrom.value = '';
+        edtDateTo.value = '';
+        edtTravelers.value = '';
+        edtPickup.value = '';
+        edtRoom.value = '';
+        edtInvoiceNo.value = '';
+        edtInvoiceDate.value = '';
+        edtDueDate.value = '';
+        edtAdvance.value = '';
+        edtDiscount.value = '';
+        edtUPI.value = '';
+        edtBankName.value = '';
+        edtAccountNo.value = '';
+        edtIFSC.value = '';
+        edtCashAmount.value = '';
+        edtBookingId.value = '';
+        edtGSTRate.value = '18';
+        edtGSTAmount.value = '';
+        edtPaymentType.value = 'online';
         edtPaymentStatus.value = 'Partially Paid';
 
         items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+        togglePaymentFields();
         renderItemEditor();
         updatePreview();
     }
 
     function addItem() {
-        items.push({ desc: 'New Item', qty: '1', rate: 0, amount: 0 });
+        items.push({ desc: '', qty: '', rate: 0, amount: 0 });
         renderItemEditor();
         updatePreview();
     }
@@ -659,24 +850,29 @@
 
     // INIT
     renderItemEditor();
+    togglePaymentFields();
     updatePreview();
 
     // EVENTS
-    updateBtn.addEventListener('click', function(e) { e.preventDefault(); updatePreview(); });
+    edtPaymentType.addEventListener('change', togglePaymentFields);
+    edtGSTRate.addEventListener('input', function() { calculateGST(); updatePreview(); });
+    edtDiscount.addEventListener('input', function() { calculateGST(); updatePreview(); });
+
+    updateBtn.addEventListener('click', function(e) { e.preventDefault(); calculateGST(); updatePreview(); });
     resetBtn.addEventListener('click', function(e) { e.preventDefault(); resetToDefault(); });
     addItemBtn.addEventListener('click', function(e) { e.preventDefault(); addItem(); });
     downloadBtn.addEventListener('click', function(e) { e.preventDefault(); downloadPDF(); });
 
     document.querySelectorAll('#editorPanel input, #editorPanel select').forEach(el => {
-        el.addEventListener('change', updatePreview);
-        el.addEventListener('input', updatePreview);
+        el.addEventListener('change', function() { calculateGST(); updatePreview(); });
+        el.addEventListener('input', function() { calculateGST(); updatePreview(); });
     });
 
     document.addEventListener('change', function(e) {
-        if (e.target.closest('#itemsContainer')) updatePreview();
+        if (e.target.closest('#itemsContainer')) { calculateGST(); updatePreview(); }
     });
     document.addEventListener('input', function(e) {
-        if (e.target.closest('#itemsContainer')) updatePreview();
+        if (e.target.closest('#itemsContainer')) { calculateGST(); updatePreview(); }
     });
 
 })();
