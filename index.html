@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Kishori Travels · Invoice Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background: #eef3f8;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+        .wrapper {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        @media (max-width: 1000px) {
+            .wrapper { grid-template-columns: 1fr; }
+        }
+
+        .editor {
+            background: white;
+            padding: 1.5rem 1.8rem;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border: 1px solid #dce6ef;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .editor h3 {
+            font-size: 1.1rem;
+            color: #0b2a3e;
+            border-bottom: 2px solid #dce6ef;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .editor h3 i { color: #2a7faa; }
+
+        .edit-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+        .edit-group.full { grid-template-columns: 1fr; }
+
+        .edit-field label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #3a637b;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+        .edit-field input, .edit-field select {
+            width: 100%;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #cddce8;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            background: #fafdff;
+            transition: 0.15s;
+        }
+        .edit-field input:focus, .edit-field select:focus {
+            outline: 2px solid #2a7faa;
+            border-color: transparent;
+        }
+        .edit-field input[type="date"] { 
+            padding: 0.35rem 0.6rem;
+            cursor: pointer;
+        }
+
+        .item-editor {
+            background: #f5f9fe;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .item-editor .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 0.5fr;
+            gap: 0.6rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .item-editor .item-row .edit-field { margin: 0; }
+        .item-editor .item-row .edit-field input { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+
+        .btn-group {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+        .btn {
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            border: 1px solid #b7cfdf;
+            background: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #0b2a3e;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary {
+            background: #0b2a3e;
+            border-color: #0b2a3e;
+            color: white;
+        }
+        .btn-primary:hover { background: #1f4a63; }
+        .btn-success {
+            background: #1e7e5c;
+            border-color: #1e7e5c;
+            color: white;
+        }
+        .btn-success:hover { background: #146a4b; }
+        .btn-outline { background: transparent; border: 1px solid #b7cfdf; }
+        .btn-sm { padding: 0.2rem 0.8rem; font-size: 0.7rem; }
+
+        .remove-item {
+            background: #d94f4f;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            width: 28px;
+            height: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .remove-item:hover { background: #b33a3a; }
+
+        .payment-method-edit {
+            background: #f5f9fe;
+            border-radius: 12px;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .payment-method-edit .edit-field {
+            margin-bottom: 0.4rem;
+        }
+
+        /* ---------- INVOICE PREVIEW - SCREEN ---------- */
+        .preview {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border: 1px solid #dce6ef;
+        }
+
+        /* ---------- INVOICE CONTENT - COMMON ---------- */
+        #invoiceContent {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #1a1a1a;
+        }
+        #invoiceContent .brand h1 { font-size: 22px; }
+        #invoiceContent .brand .tagline { font-size: 11px; }
+        #invoiceContent .company-details { font-size: 11px; text-align: right; line-height: 1.5; }
+        #invoiceContent .company-details .gst { font-size: 10px; padding: 0.1rem 0.6rem; background: #e9f0f5; border-radius: 40px; display: inline-block; }
+        #invoiceContent .invoice-title { background: #f0f6fb; border-radius: 30px; padding: 0.4rem 1rem; display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.8rem; }
+        #invoiceContent .invoice-title h2 { font-size: 18px; font-weight: 600; color: #0b2a3e; }
+        #invoiceContent .invoice-title .meta { font-size: 11px; display: flex; gap: 1.2rem; color: #1e3b4e; }
+        #invoiceContent .invoice-title .meta span { font-weight: 600; }
+        #invoiceContent .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #f9fcff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin-bottom: 0.8rem; }
+        #invoiceContent .info-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
+        #invoiceContent .info-grid .customer-name { font-weight: 600; font-size: 14px; color: #0b2a3e; }
+        #invoiceContent .info-grid .detail-line { font-size: 11px; padding: 2px 0; color: #1e3b4e; }
+        #invoiceContent .info-grid .trip-line { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; border-bottom: 1px solid #e5eef7; }
+        #invoiceContent .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #e3edf5; margin: 0.6rem 0; }
+        #invoiceContent table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        #invoiceContent th { background: #e3edf5; color: #1a4057; font-weight: 600; padding: 0.4rem 0.6rem; text-align: left; }
+        #invoiceContent th.text-center { text-align: center; }
+        #invoiceContent td { padding: 0.35rem 0.6rem; border-bottom: 1px solid #e9f0f6; }
+        /* ---------- FIX: Center align RATE and AMOUNT columns ---------- */
+        #invoiceContent td.text-center { text-align: center; }
+        #invoiceContent td.text-right { text-align: right; }
+        #invoiceContent .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #fafdff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin: 0.6rem 0; }
+        #invoiceContent .payment-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
+        #invoiceContent .payment-grid .summary-line { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; border-bottom: 1px solid #eaeff5; }
+        #invoiceContent .payment-grid .summary-line.balance { font-weight: 700; font-size: 13px; border-bottom: none; padding-top: 4px; }
+        #invoiceContent .balance-due { background: #d9e7f2; padding: 0.1rem 0.8rem; border-radius: 40px; }
+        #invoiceContent .payment-status { background: #f7d44a; padding: 0.1rem 0.8rem; border-radius: 40px; font-weight: 600; font-size: 10px; display: inline-block; }
+        #invoiceContent .notes { background: #f3f8fe; padding: 0.4rem 1rem; border-radius: 16px; border-left: 3px solid #2a7faa; margin: 0.6rem 0; font-size: 10px; color: #1b3a4b; }
+        #invoiceContent .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-top: 0.6rem; border-top: 2px solid #e5eef7; font-size: 10px; color: #1f4057; }
+
+        /* ---------- PDF SPECIFIC ---------- */
+        @media print {
+            .editor, .btn-group { display: none !important; }
+            .wrapper { display: block; }
+            .preview { box-shadow: none; border: none; padding: 10px; }
+            #invoiceContent { font-size: 11px; }
+        }
+
+        .pdf-export #invoiceContent {
+            font-size: 11px !important;
+            padding: 10px !important;
+        }
+        .pdf-export #invoiceContent .brand h1 { font-size: 18px !important; }
+        .pdf-export #invoiceContent .invoice-title h2 { font-size: 15px !important; }
+        .pdf-export #invoiceContent .info-grid .customer-name { font-size: 12px !important; }
+        .pdf-export #invoiceContent table { font-size: 10px !important; }
+        .pdf-export #invoiceContent .payment-grid .summary-line { font-size: 10px !important; }
+
+        .brand-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eef2f6;
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+        .brand h1 i { color: #2a7faa; }
+        .brand h1 { font-size: 22px; color: #0b2a3e; }
+        .brand .tagline { font-size: 11px; color: #4b5e6b; }
+        .company-details { text-align: right; line-height: 1.5; color: #1f3a4b; }
+        .company-details div { font-size: 11px; }
+        .company-details .gst { background: #e9f0f5; padding: 0.1rem 0.6rem; border-radius: 40px; display: inline-block; font-size: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- EDITOR -->
+    <div class="editor" id="editorPanel">
+        <h3><i class="fas fa-pen-to-square"></i> Edit Invoice</h3>
+
+        <div class="edit-group">
+            <div class="edit-field"><label>Customer Name</label><input id="edtCustomer" value="Mr. Amit Tanwar" /></div>
+            <div class="edit-field"><label>Phone</label><input id="edtPhone" value="9350003572" /></div>
+            <div class="edit-field"><label>Email</label><input id="edtEmail" value="tanwar.amit903@gmail.com" /></div>
+            <div class="edit-field"><label>Address</label><input id="edtAddress" value="New Delhi, India" /></div>
+        </div>
+
+        <div class="edit-group full">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.8rem;">
+                <div class="edit-field"><label>Travel From</label><input id="edtDateFrom" type="date" value="2026-06-15" /></div>
+                <div class="edit-field"><label>Travel To</label><input id="edtDateTo" type="date" value="2026-06-21" /></div>
+                <div class="edit-field"><label>Invoice Date</label><input id="edtInvoiceDate" type="date" value="2026-06-05" /></div>
+                <div class="edit-field"><label>Due Date</label><input id="edtDueDate" type="date" value="2026-06-12" /></div>
+                <div class="edit-field"><label>Travelers</label><input id="edtTravelers" value="2 Adults" /></div>
+                <div class="edit-field"><label>Pickup Point</label><input id="edtPickup" value="Delhi" /></div>
+                <div class="edit-field"><label>Room Sharing</label><input id="edtRoom" value="Double Sharing" /></div>
+                <div class="edit-field"><label>Invoice No.</label><input id="edtInvoiceNo" value="INV-2048" /></div>
+            </div>
+        </div>
+
+        <div class="item-editor">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                <span style="font-weight:600; color:#0b2a3e;"><i class="fas fa-list"></i> Items</span>
+                <button class="btn btn-success btn-sm" id="addItemBtn"><i class="fas fa-plus"></i> Add</button>
+            </div>
+            <div id="itemsContainer"></div>
+        </div>
+
+        <div class="edit-group" style="margin-top:0.5rem;">
+            <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number" value="100" step="5" /></div>
+            <div class="edit-field"><label>Discount (₹)</label><input id="edtDiscount" type="number" value="0" step="5" /></div>
+        </div>
+
+        <div class="payment-method-edit">
+            <div style="font-weight:600; color:#0b2a3e; margin-bottom:0.5rem;"><i class="fas fa-credit-card"></i> Payment Method</div>
+            <div class="edit-field"><label>UPI ID</label><input id="edtUPI" value="kishoritravels@upi" /></div>
+            <div class="edit-field"><label>Bank Name</label><input id="edtBankName" value="HDFC Bank" /></div>
+            <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" value="1234 5678 9010 11" /></div>
+            <div class="edit-field"><label>IFSC</label><input id="edtIFSC" value="HDFC0001234" /></div>
+            <div class="edit-field"><label>Status</label>
+                <select id="edtPaymentStatus">
+                    <option value="Partially Paid" selected>Partially Paid</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Unpaid">Unpaid</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="updatePreviewBtn"><i class="fas fa-sync"></i> Update</button>
+            <button class="btn btn-success" id="downloadPDFBtn"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button class="btn btn-outline" id="resetDefaultBtn"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview" id="invoicePreview">
+        <div id="invoiceContent">
+
+            <!-- HEADER -->
+            <div class="brand-row">
+                <div class="brand">
+                    <h1><i class="fas fa-plane-departure"></i> KISHORI TRAVELS</h1>
+                    <div class="tagline"><i class="fas fa-map-pin"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
+                </div>
+                <div class="company-details">
+                    <div><i class="fas fa-phone-alt"></i> +91 9540680005</div>
+                    <div><i class="fas fa-envelope"></i> kishoritravel@gmail.com</div>
+                    <div><i class="fas fa-globe"></i> www.kishoritravels.com</div>
+                </div>
+            </div>
+
+            <!-- INVOICE TITLE -->
+            <div class="invoice-title">
+                <h2><i class="fas fa-file-invoice"></i> INVOICE</h2>
+                <div class="meta">
+                    <div><span>Invoice No.:</span> <span id="previewInvoiceNo">INV-2048</span></div>
+                    <div><span>Date:</span> <span id="previewInvoiceDate">05/06/2026</span></div>
+                    <div><span>Due:</span> <span id="previewDueDate">12/06/2026</span></div>
+                </div>
+            </div>
+
+            <!-- BILL TO + TRIP -->
+            <div class="info-grid">
+                <div>
+                    <h4><i class="fas fa-user-circle"></i> BILL TO</h4>
+                    <div class="customer-name" id="previewCustomer">Mr. Amit Tanwar</div>
+                    <div class="detail-line" id="previewPhone"><i class="fas fa-phone"></i> 9350003572</div>
+                    <div class="detail-line" id="previewEmail"><i class="fas fa-envelope"></i> tanwar.amit903@gmail.com</div>
+                    <div class="detail-line" id="previewAddress"><i class="fas fa-location-dot"></i> New Delhi, India</div>
+                </div>
+                <div>
+                    <h4><i class="fas fa-route"></i> TRIP DETAILS</h4>
+                    <div class="trip-line"><span>Travel Date</span><span><span id="previewDateFrom">15/06/2026</span> to <span id="previewDateTo">21/06/2026</span></span></div>
+                    <div class="trip-line"><span>Travelers</span><span id="previewTravelers">2 Adults</span></div>
+                    <div class="trip-line"><span>Pickup</span><span id="previewPickup">Delhi</span></div>
+                    <div class="trip-line" style="border-bottom:none;"><span>Room</span><span id="previewRoom">Double Sharing</span></div>
+                </div>
+            </div>
+
+            <!-- TABLE - FIXED: Rate and Amount columns now center aligned -->
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">DESCRIPTION</th>
+                            <th style="text-align:center;">QTY/Nights</th>
+                            <th style="text-align:center;">RATE</th>
+                            <th style="text-align:center;">AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewItemsBody"></tbody>
+                </table>
+            </div>
+
+            <!-- PAYMENT -->
+            <div class="payment-grid">
+                <div>
+                    <h4>PAYMENT SUMMARY</h4>
+                    <div class="summary-line"><span>Package Cost</span><span id="previewPkgCost">₹277.00</span></div>
+                    <div class="summary-line"><span>Discount</span><span id="previewDiscount">₹0.00</span></div>
+                    <div class="summary-line"><span>Net Amount</span><span id="previewNet">₹277.00</span></div>
+                    <div class="summary-line"><span>Advance Received</span><span id="previewAdvance">₹100.00</span></div>
+                    <div class="summary-line balance"><span>Balance Due</span><span class="balance-due" id="previewBalance">₹177.00</span></div>
+                </div>
+                <div>
+                    <h4>PAYMENT METHOD</h4>
+                    <div style="font-weight:500; font-size:12px;" id="previewUPI">UPI: kishoritravels@upi</div>
+                    <div style="background:#eef5fa; padding:0.3rem 0.8rem; border-radius:30px; margin:4px 0; font-size:11px;">
+                        <span id="previewBankName">HDFC Bank</span><br>
+                        A/C: <span id="previewAccountNo">1234 5678 9010 11</span><br>
+                        IFSC: <span id="previewIFSC">HDFC0001234</span>
+                    </div>
+                    <div><span class="payment-status" id="previewPaymentStatus"><i class="fas fa-clock"></i> Partially Paid</span></div>
+                </div>
+            </div>
+
+            <!-- NOTES -->
+            <div class="notes">
+                <i class="fas fa-circle-info"></i> <strong>IMPORTANT NOTES</strong><br>
+                • Balance payment must be cleared before the trip.<br>
+                • Cancellation policy applicable as per company rules.<br>
+                • Hotels and transport subject to availability.<br>
+                • Computer generated invoice. No signature required.
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <div>
+                    <i class="fas fa-headset"></i> +91 9540680005 &nbsp;|&nbsp;
+                    <i class="fas fa-globe"></i> www.kishoritravels.com &nbsp;|&nbsp;
+                    <i class="fas fa-envelope"></i> info@kishoritravels.com
+                </div>
+                <div style="font-weight:500;">Thank You!</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const DEFAULT_ITEMS = [
+        { desc: 'Manali', qty: '1 Night', rate: 45, amount: 45 },
+        { desc: 'Kasol', qty: '1 Night', rate: 40, amount: 40 },
+        { desc: 'Jibhi', qty: '1 Night', rate: 18, amount: 18 },
+        { desc: 'Barot', qty: '2 Nights', rate: 22, amount: 44 },
+        { desc: 'MAP (Food)', qty: '1', rate: 55, amount: 55 },
+        { desc: 'Transport (Delhi to Delhi)', qty: '1', rate: 75, amount: 75 }
+    ];
+
+    // DOM REFS
+    const edtCustomer = document.getElementById('edtCustomer');
+    const edtPhone = document.getElementById('edtPhone');
+    const edtEmail = document.getElementById('edtEmail');
+    const edtAddress = document.getElementById('edtAddress');
+    const edtDateFrom = document.getElementById('edtDateFrom');
+    const edtDateTo = document.getElementById('edtDateTo');
+    const edtTravelers = document.getElementById('edtTravelers');
+    const edtPickup = document.getElementById('edtPickup');
+    const edtRoom = document.getElementById('edtRoom');
+    const edtInvoiceNo = document.getElementById('edtInvoiceNo');
+    const edtInvoiceDate = document.getElementById('edtInvoiceDate');
+    const edtDueDate = document.getElementById('edtDueDate');
+    const edtAdvance = document.getElementById('edtAdvance');
+    const edtDiscount = document.getElementById('edtDiscount');
+    const edtUPI = document.getElementById('edtUPI');
+    const edtBankName = document.getElementById('edtBankName');
+    const edtAccountNo = document.getElementById('edtAccountNo');
+    const edtIFSC = document.getElementById('edtIFSC');
+    const edtPaymentStatus = document.getElementById('edtPaymentStatus');
+
+    const itemsContainer = document.getElementById('itemsContainer');
+    const addItemBtn = document.getElementById('addItemBtn');
+    const updateBtn = document.getElementById('updatePreviewBtn');
+    const resetBtn = document.getElementById('resetDefaultBtn');
+    const downloadBtn = document.getElementById('downloadPDFBtn');
+
+    const previewCustomer = document.getElementById('previewCustomer');
+    const previewPhone = document.getElementById('previewPhone');
+    const previewEmail = document.getElementById('previewEmail');
+    const previewAddress = document.getElementById('previewAddress');
+    const previewDateFrom = document.getElementById('previewDateFrom');
+    const previewDateTo = document.getElementById('previewDateTo');
+    const previewTravelers = document.getElementById('previewTravelers');
+    const previewPickup = document.getElementById('previewPickup');
+    const previewRoom = document.getElementById('previewRoom');
+    const previewInvoiceNo = document.getElementById('previewInvoiceNo');
+    const previewInvoiceDate = document.getElementById('previewInvoiceDate');
+    const previewDueDate = document.getElementById('previewDueDate');
+    const previewItemsBody = document.getElementById('previewItemsBody');
+    const previewPkgCost = document.getElementById('previewPkgCost');
+    const previewDiscount = document.getElementById('previewDiscount');
+    const previewNet = document.getElementById('previewNet');
+    const previewAdvance = document.getElementById('previewAdvance');
+    const previewBalance = document.getElementById('previewBalance');
+    const previewUPI = document.getElementById('previewUPI');
+    const previewBankName = document.getElementById('previewBankName');
+    const previewAccountNo = document.getElementById('previewAccountNo');
+    const previewIFSC = document.getElementById('previewIFSC');
+    const previewPaymentStatus = document.getElementById('previewPaymentStatus');
+
+    let items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+
+    function currency(amount) {
+        return '₹' + Number(amount).toFixed(2);
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return 'DD/MM/YYYY';
+        const d = new Date(dateStr + 'T00:00:00');
+        if (isNaN(d.getTime())) return dateStr;
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    function renderItemEditor() {
+        itemsContainer.innerHTML = '';
+        items.forEach((item, index) => {
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+                <div class="edit-field"><input class="item-desc" value="${item.desc}" placeholder="Description" /></div>
+                <div class="edit-field"><input class="item-qty" value="${item.qty}" placeholder="Qty" /></div>
+                <div class="edit-field"><input class="item-rate" type="number" value="${item.rate}" placeholder="Rate" step="1" /></div>
+                <button class="remove-item" data-index="${index}"><i class="fas fa-times"></i></button>
+            `;
+            itemsContainer.appendChild(row);
+        });
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const idx = parseInt(this.dataset.index);
+                if (items.length <= 1) { alert('At least one item required.'); return; }
+                items.splice(idx, 1);
+                renderItemEditor();
+                updatePreview();
+            });
+        });
+        document.querySelectorAll('#itemsContainer .item-desc, #itemsContainer .item-qty, #itemsContainer .item-rate').forEach(inp => {
+            inp.addEventListener('change', function() { collectItemsFromEditor(); updatePreview(); });
+            inp.addEventListener('input', function() { collectItemsFromEditor(); updatePreview(); });
+        });
+    }
+
+    function collectItemsFromEditor() {
+        const rows = itemsContainer.querySelectorAll('.item-row');
+        const newItems = [];
+        rows.forEach(row => {
+            const desc = row.querySelector('.item-desc').value || 'Item';
+            const qty = row.querySelector('.item-qty').value || '1';
+            const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+            newItems.push({ desc, qty, rate, amount: rate });
+        });
+        items = newItems;
+    }
+
+    function updatePreview() {
+        collectItemsFromEditor();
+
+        const customer = edtCustomer.value || 'Customer';
+        const phone = edtPhone.value || '';
+        const email = edtEmail.value || '';
+        const address = edtAddress.value || '';
+        const dateFrom = formatDate(edtDateFrom.value);
+        const dateTo = formatDate(edtDateTo.value);
+        const travelers = edtTravelers.value || '0';
+        const pickup = edtPickup.value || 'Pickup';
+        const room = edtRoom.value || 'Sharing';
+        const invNo = edtInvoiceNo.value || 'INV-0000';
+        const invDate = formatDate(edtInvoiceDate.value);
+        const dueDate = formatDate(edtDueDate.value);
+        const advance = parseFloat(edtAdvance.value) || 0;
+        const discount = parseFloat(edtDiscount.value) || 0;
+
+        const upi = edtUPI.value || 'upi@pay';
+        const bankName = edtBankName.value || 'Bank Name';
+        const accountNo = edtAccountNo.value || '0000 0000 0000 00';
+        const ifsc = edtIFSC.value || 'IFSC0000000';
+        const paymentStatus = edtPaymentStatus.value || 'Partially Paid';
+
+        previewCustomer.textContent = customer;
+        previewPhone.innerHTML = `<i class="fas fa-phone"></i> ${phone}`;
+        previewEmail.innerHTML = `<i class="fas fa-envelope"></i> ${email}`;
+        previewAddress.innerHTML = `<i class="fas fa-location-dot"></i> ${address}`;
+        previewDateFrom.textContent = dateFrom;
+        previewDateTo.textContent = dateTo;
+        previewTravelers.textContent = travelers;
+        previewPickup.textContent = pickup;
+        previewRoom.textContent = room;
+        previewInvoiceNo.textContent = invNo;
+        previewInvoiceDate.textContent = invDate;
+        previewDueDate.textContent = dueDate;
+
+        // TABLE - Rate and Amount columns center aligned
+        previewItemsBody.innerHTML = '';
+        let total = 0;
+        items.forEach(item => {
+            const amt = item.amount || 0;
+            total += amt;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="padding:0.3rem 0.6rem; font-weight:500; text-align:left;">${item.desc}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${item.qty}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${currency(item.rate)}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${currency(amt)}</td>
+            `;
+            previewItemsBody.appendChild(tr);
+        });
+
+        const net = Math.max(0, total - discount);
+        const balance = Math.max(0, net - advance);
+        previewPkgCost.textContent = currency(total);
+        previewDiscount.textContent = currency(discount);
+        previewNet.textContent = currency(net);
+        previewAdvance.textContent = currency(advance);
+        previewBalance.textContent = currency(balance);
+
+        previewUPI.textContent = `UPI: ${upi}`;
+        previewBankName.textContent = bankName;
+        previewAccountNo.textContent = accountNo;
+        previewIFSC.textContent = ifsc;
+        const statusIcon = paymentStatus === 'Paid' ? 'fa-check-circle' : 
+                          paymentStatus === 'Unpaid' ? 'fa-times-circle' : 'fa-clock';
+        previewPaymentStatus.innerHTML = `<i class="fas ${statusIcon}"></i> ${paymentStatus}`;
+    }
+
+    function resetToDefault() {
+        edtCustomer.value = 'Mr. Amit Tanwar';
+        edtPhone.value = '9350003572';
+        edtEmail.value = 'tanwar.amit903@gmail.com';
+        edtAddress.value = 'New Delhi, India';
+        edtDateFrom.value = '2026-06-15';
+        edtDateTo.value = '2026-06-21';
+        edtTravelers.value = '2 Adults';
+        edtPickup.value = 'Delhi';
+        edtRoom.value = 'Double Sharing';
+        edtInvoiceNo.value = 'INV-2048';
+        edtInvoiceDate.value = '2026-06-05';
+        edtDueDate.value = '2026-06-12';
+        edtAdvance.value = '100';
+        edtDiscount.value = '0';
+        edtUPI.value = 'kishoritravels@upi';
+        edtBankName.value = 'HDFC Bank';
+        edtAccountNo.value = '1234 5678 9010 11';
+        edtIFSC.value = 'HDFC0001234';
+        edtPaymentStatus.value = 'Partially Paid';
+
+        items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+        renderItemEditor();
+        updatePreview();
+    }
+
+    function addItem() {
+        items.push({ desc: 'New Item', qty: '1', rate: 0, amount: 0 });
+        renderItemEditor();
+        updatePreview();
+    }
+
+    function downloadPDF() {
+        updatePreview();
+        const content = document.getElementById('invoiceContent');
+        content.classList.add('pdf-export');
+        
+        const opt = {
+            margin: [0.4, 0.4, 0.4, 0.4],
+            filename: `Invoice_${edtInvoiceNo.value || 'INV'}.pdf`,
+            image: { type: 'jpeg', quality: 0.95 },
+            html2canvas: { 
+                scale: 1.8, 
+                letterRendering: true, 
+                useCORS: true, 
+                logging: false,
+                width: 800,
+                height: 1100
+            },
+            jsPDF: { 
+                unit: 'in', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            },
+            pagebreak: { mode: 'avoid-all' }
+        };
+
+        html2pdf().set(opt).from(content).save().then(function() {
+            content.classList.remove('pdf-export');
+        });
+    }
+
+    // INIT
+    renderItemEditor();
+    updatePreview();
+
+    // EVENTS
+    updateBtn.addEventListener('click', function(e) { e.preventDefault(); updatePreview(); });
+    resetBtn.addEventListener('click', function(e) { e.preventDefault(); resetToDefault(); });
+    addItemBtn.addEventListener('click', function(e) { e.preventDefault(); addItem(); });
+    downloadBtn.addEventListener('click', function(e) { e.preventDefault(); downloadPDF(); });
+
+    document.querySelectorAll('#editorPanel input, #editorPanel select').forEach(el => {
+        el.addEventListener('change', updatePreview);
+        el.addEventListener('input', updatePreview);
+    });
+
+    document.addEventListener('change', function(e) {
+        if (e.target.closest('#itemsContainer')) updatePreview();
+    });
+    document.addEventListener('input', function(e) {
+        if (e.target.closest('#itemsContainer')) updatePreview();
+    });
+
+})();
+</script>
+
+</body>
+</html>
