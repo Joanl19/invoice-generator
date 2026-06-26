@@ -16,7 +16,7 @@
         body {
             background: #eef3f8;
             min-height: 100vh;
-            padding: 1rem;
+            padding: 2rem 1rem;
             display: flex;
             justify-content: center;
         }
@@ -25,55 +25,57 @@
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            gap: 2rem;
             align-items: start;
         }
+        @media (max-width: 1000px) {
+            .wrapper { grid-template-columns: 1fr; }
+        }
 
-        /* ---------- EDITOR PANEL ---------- */
         .editor {
             background: white;
-            padding: 1.2rem 1.2rem;
-            border-radius: 24px;
+            padding: 1.5rem 1.8rem;
+            border-radius: 28px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
             border: 1px solid #dce6ef;
             max-height: 90vh;
             overflow-y: auto;
         }
         .editor h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #0b2a3e;
             border-bottom: 2px solid #dce6ef;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
+            padding-bottom: 0.6rem;
+            margin-bottom: 1.2rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .editor h3 i { color: #2a7faa; }
 
         .edit-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.6rem 1rem;
-            margin-bottom: 1rem;
+            gap: 0.8rem 1.2rem;
+            margin-bottom: 1.2rem;
         }
         .edit-group.full { grid-template-columns: 1fr; }
 
         .edit-field label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #3a637b;
             font-weight: 600;
             display: block;
-            margin-bottom: 0.1rem;
+            margin-bottom: 0.15rem;
         }
         .edit-field input, .edit-field select {
             width: 100%;
-            padding: 0.35rem 0.5rem;
+            padding: 0.4rem 0.6rem;
             border: 1px solid #cddce8;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
             background: #fafdff;
             transition: 0.15s;
         }
@@ -82,7 +84,7 @@
             border-color: transparent;
         }
         .edit-field input[type="date"] { 
-            padding: 0.3rem 0.5rem;
+            padding: 0.35rem 0.6rem;
             cursor: pointer;
         }
         .edit-field input[type="number"] { 
@@ -96,39 +98,39 @@
 
         .item-editor {
             background: #f5f9fe;
-            border-radius: 14px;
-            padding: 0.8rem;
-            margin: 0.8rem 0;
+            border-radius: 16px;
+            padding: 1rem;
+            margin: 1rem 0;
         }
         .item-editor .item-row {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
-            gap: 0.4rem;
+            gap: 0.6rem;
             align-items: center;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
         }
         .item-editor .item-row .edit-field { margin: 0; }
-        .item-editor .item-row .edit-field input { padding: 0.25rem 0.4rem; font-size: 0.75rem; }
+        .item-editor .item-row .edit-field input { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
 
         .btn-group {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.6rem;
             flex-wrap: wrap;
-            margin-top: 1rem;
+            margin-top: 1.2rem;
         }
         .btn {
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1.4rem;
             border-radius: 40px;
             border: 1px solid #b7cfdf;
             background: white;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: 0.15s;
             color: #0b2a3e;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
         .btn-primary {
             background: #0b2a3e;
@@ -143,18 +145,18 @@
         }
         .btn-success:hover { background: #146a4b; }
         .btn-outline { background: transparent; border: 1px solid #b7cfdf; }
-        .btn-sm { padding: 0.15rem 0.6rem; font-size: 0.65rem; }
+        .btn-sm { padding: 0.2rem 0.8rem; font-size: 0.7rem; }
 
         .remove-item {
             background: #d94f4f;
             color: white;
             border: none;
             border-radius: 30px;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -164,11 +166,11 @@
         .payment-method-edit {
             background: #f5f9fe;
             border-radius: 12px;
-            padding: 0.6rem;
-            margin-top: 0.4rem;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
         }
         .payment-method-edit .edit-field {
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.4rem;
         }
 
         .online-fields { display: block; }
@@ -177,60 +179,72 @@
         /* ---------- INVOICE PREVIEW ---------- */
         .preview {
             background: white;
-            border-radius: 24px;
-            padding: 1.2rem 1.2rem;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
             border: 1px solid #dce6ef;
         }
 
-        /* ---------- INVOICE CONTENT ---------- */
         #invoiceContent {
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1.4;
             color: #1a1a1a;
         }
-        #invoiceContent .brand h1 { font-size: 18px; }
-        #invoiceContent .brand .tagline { font-size: 10px; }
-        #invoiceContent .company-details { font-size: 10px; text-align: left; line-height: 1.4; }
-        #invoiceContent .company-details .gst { font-size: 9px; padding: 0.1rem 0.5rem; background: #e9f0f5; border-radius: 40px; display: inline-block; }
-        #invoiceContent .invoice-title { background: #c7d6e6; border-radius: 24px; padding: 0.3rem 0.8rem; display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.6rem; }
-        #invoiceContent .invoice-title h2 { font-size: 15px; font-weight: 600; color: #0b2a3e; }
-        #invoiceContent .invoice-title .meta { font-size: 10px; display: flex; gap: 0.8rem; color: #1e3b4e; }
+        #invoiceContent .brand h1 { font-size: 22px; }
+        #invoiceContent .brand .tagline { font-size: 11px; }
+        #invoiceContent .company-details { font-size: 11px; text-align: left; line-height: 1.5; }
+        #invoiceContent .company-details .gst { font-size: 10px; padding: 0.1rem 0.6rem; background: #e9f0f5; border-radius: 40px; display: inline-block; }
+        #invoiceContent .invoice-title { background: #c7d6e6; border-radius: 30px; padding: 0.4rem 1rem; display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.8rem; }
+        #invoiceContent .invoice-title h2 { font-size: 18px; font-weight: 600; color: #0b2a3e; }
+        #invoiceContent .invoice-title .meta { font-size: 11px; display: flex; gap: 1.2rem; color: #1e3b4e; }
         #invoiceContent .invoice-title .meta span { font-weight: 600; }
-        #invoiceContent .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; background: #c7d6e6; padding: 0.5rem 0.8rem; border-radius: 10px; border: 1px solid #e2ebf3; margin-bottom: 0.6rem; }
-        #invoiceContent .info-grid h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.15rem; margin-bottom: 0.2rem; }
-        #invoiceContent .info-grid .customer-name { font-weight: 600; font-size: 12px; color: #0b2a3e; }
-        #invoiceContent .info-grid .detail-line { font-size: 10px; padding: 1px 0; color: #1e3b4e; }
-        #invoiceContent .info-grid .trip-line { display: flex; justify-content: space-between; font-size: 10px; padding: 1px 0; border-bottom: 1px solid #e5eef7; }
-        #invoiceContent .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #c7d6e6; margin: 0.5rem 0; }
-        #invoiceContent table { width: 100%; border-collapse: collapse; font-size: 10px; min-width: 300px; }
-        #invoiceContent th { background: #c7d6e6; color: #1a4057; font-weight: 600; padding: 0.3rem 0.5rem; text-align: left; }
-        #invoiceContent td { padding: 0.25rem 0.5rem; border-bottom: 1px solid #e9f0f6; }
+        #invoiceContent .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #c7d6e6; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin-bottom: 0.8rem; }
+        #invoiceContent .info-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
+        #invoiceContent .info-grid .customer-name { font-weight: 600; font-size: 14px; color: #0b2a3e; }
+        #invoiceContent .info-grid .detail-line { font-size: 11px; padding: 2px 0; color: #1e3b4e; }
+        #invoiceContent .info-grid .trip-line { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; border-bottom: 1px solid #e5eef7; }
+        #invoiceContent .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #c7d6e6; margin: 0.6rem 0; }
+        #invoiceContent table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        #invoiceContent th { background: #c7d6e6; color: #1a4057; font-weight: 600; padding: 0.4rem 0.6rem; text-align: left; }
+        #invoiceContent td { padding: 0.35rem 0.6rem; border-bottom: 1px solid #e9f0f6; }
         #invoiceContent td.text-center { text-align: center; }
-        #invoiceContent .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; background: #fafdff; padding: 0.5rem 0.8rem; border-radius: 10px; border: 1px solid #e2ebf3; margin: 0.5rem 0; }
-        #invoiceContent .payment-grid h4 { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.15rem; margin-bottom: 0.2rem; }
-        #invoiceContent .payment-grid .summary-line { display: flex; justify-content: space-between; font-size: 10px; padding: 2px 0; border-bottom: 1px solid #eaeff5; }
-        #invoiceContent .payment-grid .summary-line.balance { font-weight: 700; font-size: 11px; border-bottom: none; padding-top: 3px; }
-        #invoiceContent .balance-due { background: #d9e7f2; padding: 0.1rem 0.6rem; border-radius: 40px; }
-        #invoiceContent .payment-status { background: #f7d44a; padding: 0.1rem 0.6rem; border-radius: 40px; font-weight: 600; font-size: 9px; display: inline-block; }
-        #invoiceContent .notes { background: #f3f8fe; padding: 0.3rem 0.8rem; border-radius: 12px; border-left: 3px solid #2a7faa; margin: 0.5rem 0; font-size: 9px; color: #1b3a4b; }
-        #invoiceContent .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 2px solid #e5eef7; font-size: 9px; color: #1f4057; gap: 0.3rem; }
+        #invoiceContent .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #fafdff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin: 0.6rem 0; }
+        #invoiceContent .payment-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
+        #invoiceContent .payment-grid .summary-line { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; border-bottom: 1px solid #eaeff5; }
+        #invoiceContent .payment-grid .summary-line.balance { font-weight: 700; font-size: 13px; border-bottom: none; padding-top: 4px; }
+        #invoiceContent .balance-due { background: #d9e7f2; padding: 0.1rem 0.8rem; border-radius: 40px; }
+        #invoiceContent .payment-status { background: #f7d44a; padding: 0.1rem 0.8rem; border-radius: 40px; font-weight: 600; font-size: 10px; display: inline-block; }
+        #invoiceContent .notes { background: #f3f8fe; padding: 0.4rem 1rem; border-radius: 16px; border-left: 3px solid #2a7faa; margin: 0.6rem 0; font-size: 10px; color: #1b3a4b; }
+        #invoiceContent .footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; padding-top: 0.6rem; border-top: 2px solid #e5eef7; font-size: 10px; color: #1f4057; }
 
-        /* ---------- BRAND ROW ---------- */
+        /* ---------- PDF SPECIFIC ---------- */
+        @media print {
+            .editor, .btn-group { display: none !important; }
+            .wrapper { display: block; }
+            .preview { box-shadow: none; border: none; padding: 10px; }
+            #invoiceContent { font-size: 11px; }
+        }
+        .pdf-export #invoiceContent {
+            font-size: 11px !important;
+            padding: 10px !important;
+        }
+        .pdf-export #invoiceContent .brand h1 { font-size: 18px !important; }
+        .pdf-export #invoiceContent .invoice-title h2 { font-size: 15px !important; }
+        .pdf-export #invoiceContent table { font-size: 10px !important; }
+
         .brand-row {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #eef2f6;
-            padding-bottom: 0.5rem;
-            margin-bottom: 0.5rem;
-            gap: 0.5rem;
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.6rem;
         }
         .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         .brand-logo {
             width: 80px;
@@ -249,200 +263,32 @@
             height: 100%;
             object-fit: cover;
         }
-        .brand h1 { font-size: 18px; color: #0b2a3e; }
-        .brand .tagline { font-size: 9px; color: #4b5e6b; }
-        .company-details { text-align: right; line-height: 1.4; color: #1f3a4b; }
-        .company-details div { font-size: 9px; }
-        .company-details .gst { background: #e9f0f5; padding: 0.1rem 0.5rem; border-radius: 40px; display: inline-block; font-size: 9px; }
+        .brand h1 { font-size: 22px; color: #0b2a3e; }
+        .brand .tagline { font-size: 11px; color: #4b5e6b; }
+        .company-details { text-align: right; line-height: 1.5; color: #1f3a4b; }
+        .company-details div { font-size: 11px; }
+        .company-details .gst { background: #e9f0f5; padding: 0.1rem 0.6rem; border-radius: 40px; display: inline-block; font-size: 10px; }
 
         .cash-payment {
             background: #e8f5e9;
-            padding: 0.3rem 0.8rem;
+            padding: 0.4rem 1rem;
             border-radius: 30px;
             font-weight: 600;
             color: #1e7e5c;
             display: inline-block;
-            font-size: 10px;
+            font-size: 12px;
         }
         .gst-badge {
             background: #c7d6e6;
-            padding: 0.15rem 0.5rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 30px;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 600;
             color: #1a4057;
             display: inline-block;
         }
-        .summary-column-hidden { display: none !important; }
+        .payment-summary-hidden { display: none !important; }
 
-        /* ---------- PDF SPECIFIC ---------- */
-        @media print {
-            .editor, .btn-group { display: none !important; }
-            .wrapper { display: block; }
-            .preview { box-shadow: none; border: none; padding: 10px; }
-            #invoiceContent { font-size: 10px; }
-        }
-        .pdf-export #invoiceContent {
-            font-size: 10px !important;
-            padding: 8px !important;
-        }
-        .pdf-export #invoiceContent .brand h1 { font-size: 16px !important; }
-        .pdf-export #invoiceContent .invoice-title h2 { font-size: 13px !important; }
-        .pdf-export #invoiceContent table { font-size: 9px !important; }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 1024px) {
-            .wrapper {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-            .editor {
-                max-height: none;
-                overflow-y: visible;
-            }
-            .preview {
-                padding: 1rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 0.5rem;
-            }
-            .editor {
-                padding: 0.8rem;
-                border-radius: 16px;
-            }
-            .editor h3 {
-                font-size: 0.9rem;
-                margin-bottom: 0.8rem;
-            }
-            .edit-group {
-                grid-template-columns: 1fr;
-                gap: 0.4rem;
-            }
-            .edit-group.full {
-                grid-template-columns: 1fr;
-            }
-            .edit-group.full > div {
-                grid-template-columns: 1fr 1fr !important;
-            }
-            .edit-field input, .edit-field select {
-                font-size: 0.75rem;
-                padding: 0.3rem 0.4rem;
-            }
-            .edit-field label {
-                font-size: 0.6rem;
-            }
-
-            .item-editor {
-                padding: 0.5rem;
-            }
-            .item-editor .item-row {
-                grid-template-columns: 1.5fr 1fr 1fr 1fr 0.4fr;
-                gap: 0.3rem;
-            }
-            .item-editor .item-row .edit-field input {
-                font-size: 0.7rem;
-                padding: 0.2rem 0.3rem;
-            }
-
-            .btn-group {
-                gap: 0.3rem;
-            }
-            .btn {
-                font-size: 0.7rem;
-                padding: 0.3rem 0.7rem;
-            }
-            .btn-sm {
-                font-size: 0.6rem;
-                padding: 0.15rem 0.5rem;
-            }
-
-            .payment-method-edit {
-                padding: 0.5rem;
-            }
-            .payment-method-edit .edit-field {
-                margin-bottom: 0.2rem;
-            }
-
-            .preview {
-                padding: 0.8rem;
-                border-radius: 16px;
-            }
-            #invoiceContent {
-                font-size: 10px;
-            }
-            #invoiceContent .brand h1 { font-size: 15px; }
-            #invoiceContent .brand .tagline { font-size: 8px; }
-            #invoiceContent .company-details { font-size: 8px; }
-            #invoiceContent .invoice-title { padding: 0.3rem 0.6rem; }
-            #invoiceContent .invoice-title h2 { font-size: 13px; }
-            #invoiceContent .invoice-title .meta { font-size: 9px; gap: 0.5rem; flex-wrap: wrap; }
-            #invoiceContent .info-grid { 
-                grid-template-columns: 1fr; 
-                gap: 0.4rem; 
-                padding: 0.4rem 0.6rem;
-            }
-            #invoiceContent .info-grid .customer-name { font-size: 11px; }
-            #invoiceContent .info-grid .detail-line { font-size: 9px; }
-            #invoiceContent .info-grid .trip-line { font-size: 9px; }
-            #invoiceContent table { font-size: 9px; min-width: 250px; }
-            #invoiceContent th { padding: 0.2rem 0.3rem; }
-            #invoiceContent td { padding: 0.2rem 0.3rem; }
-            #invoiceContent .payment-grid { 
-                grid-template-columns: 1fr; 
-                gap: 0.4rem;
-                padding: 0.4rem 0.6rem;
-            }
-            #invoiceContent .payment-grid .summary-line { font-size: 9px; }
-            #invoiceContent .payment-grid .summary-line.balance { font-size: 10px; }
-            #invoiceContent .notes { font-size: 8px; padding: 0.3rem 0.6rem; }
-            #invoiceContent .footer { font-size: 8px; flex-direction: column; text-align: center; gap: 0.2rem; }
-
-            .brand-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.3rem;
-            }
-            .brand {
-                width: 100%;
-            }
-            .brand-logo {
-                width: 38px;
-                height: 38px;
-            }
-            .brand h1 { font-size: 15px; }
-            .company-details {
-                text-align: left;
-                width: 100%;
-            }
-            .company-details div { font-size: 8px; }
-
-            .cash-payment { font-size: 9px; padding: 0.2rem 0.6rem; }
-            .gst-badge { font-size: 8px; }
-        }
-
-        @media (max-width: 400px) {
-            .edit-group.full > div {
-                grid-template-columns: 1fr !important;
-            }
-            #invoiceContent table { font-size: 8px; min-width: 200px; }
-            #invoiceContent .payment-grid .summary-line { font-size: 8px; }
-            .brand h1 { font-size: 13px; }
-        }
-
-        .booking-id-badge {
-            background: #0b2a3e;
-            color: white;
-            padding: 0.1rem 0.6rem;
-            border-radius: 30px;
-            font-size: 9px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        /* Auto-calc hint */
         .calc-hint {
             font-size: 0.6rem;
             color: #2a7faa;
@@ -467,7 +313,7 @@
         </div>
 
         <div class="edit-group full">
-            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.6rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:0.8rem;">
                 <div class="edit-field"><label>Travel From</label><input id="edtDateFrom" type="date"  /></div>
                 <div class="edit-field"><label>Travel To</label><input id="edtDateTo" type="date"  /></div>
                 <div class="edit-field"><label>Invoice Date</label><input id="edtInvoiceDate" type="date"  /></div>
@@ -480,23 +326,23 @@
         </div>
 
         <div class="edit-group full">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
                 <div class="edit-field"><label>Booking ID</label><input id="edtBookingId" placeholder="Enter Booking ID" /></div>
             </div>
         </div>
 
         <div class="item-editor">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-                <span style="font-weight:600; color:#0b2a3e; font-size:0.8rem;"><i class="fas fa-list"></i> Items (Per Person Rate)</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                <span style="font-weight:600; color:#0b2a3e;"><i class="fas fa-list"></i> Items (Per Person Rate)</span>
                 <button class="btn btn-success btn-sm" id="addItemBtn"><i class="fas fa-plus"></i> Add</button>
             </div>
             <div id="itemsContainer"></div>
-            <div style="font-size:0.6rem; color:#3a637b; margin-top:0.3rem;">
+            <div class="calc-hint">
                 <i class="fas fa-info-circle"></i> Total = Per Person Rate × Number of Travelers
             </div>
         </div>
 
-        <div class="edit-group" style="margin-top:0.4rem;">
+        <div class="edit-group" style="margin-top:0.5rem;">
             <div class="edit-field"><label>Advance (₹)</label><input id="edtAdvance" type="number" step="5" /></div>
             <div class="edit-field">
                 <label>Discount (%)</label>
@@ -505,7 +351,7 @@
         </div>
 
         <div class="payment-method-edit">
-            <div style="font-weight:600; color:#0b2a3e; margin-bottom:0.3rem; font-size:0.8rem;"><i class="fas fa-credit-card"></i> Payment Method</div>
+            <div style="font-weight:600; color:#0b2a3e; margin-bottom:0.5rem;"><i class="fas fa-credit-card"></i> Payment Method</div>
             
             <div class="edit-field">
                 <label>Payment Type</label>
@@ -520,7 +366,7 @@
                 <div class="edit-field"><label>Bank Name</label><input id="edtBankName" placeholder="Enter Bank Name" /></div>
                 <div class="edit-field"><label>Account No.</label><input id="edtAccountNo" placeholder="Enter Account Number" /></div>
                 <div class="edit-field"><label>IFSC</label><input id="edtIFSC" placeholder="Enter IFSC Code" /></div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
                     <div class="edit-field"><label>GST Rate (%)</label><input id="edtGSTRate" type="number" value="18" step="1" /></div>
                     <div class="edit-field"><label>GST Amount (₹)</label><input id="edtGSTAmount" type="number" step="1" readonly style="background:#eef3f8; cursor:not-allowed;" /></div>
                 </div>
@@ -530,7 +376,7 @@
                 <div class="edit-field"><label>Cash Amount (₹)</label><input id="edtCashAmount" type="number" placeholder="Enter Cash Amount" step="100" /></div>
             </div>
 
-            <div class="edit-field" style="margin-top:0.3rem;">
+            <div class="edit-field" style="margin-top:0.4rem;">
                 <label>Payment Status</label>
                 <select id="edtPaymentStatus">
                     <option value="Partially Paid" selected>Partially Paid</option>
@@ -555,23 +401,20 @@
             <!-- HEADER -->
             <div class="brand-row">
                 <div class="brand">
-                    
                     <div>
-                        <h1>KISHORI TRAVELS</h1>
+                        <h1>KISHORI TRAVEL</h1>
                         <div class="tagline"><i class="fas fa-location-dot"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
                         <div class="company-details">
-                    <div><i class="fas fa-phone-alt"></i> +91 9540680005</div>
-                    <div><i class="fas fa-envelope"></i> kishoritravel@gmail.com</div>
-                    <div><i class="fas fa-globe"></i> www.kishoritravels.com</div>
-                    <div><i class="fas fa-receipt"></i> GSTIN: 07FJNPS6121M2ZI</div>
-                </div>
-
+                            <div><i class="fas fa-phone-alt"></i> +91 9540680005</div>
+                            <div><i class="fas fa-envelope"></i> kishoritravel@gmail.com</div>
+                            <div><i class="fas fa-globe"></i> www.kishoritravels.com</div>
+                            <div><i class="fas fa-receipt"></i> GSTIN: 07FJNPS6121M2ZI</div>
+                        </div>
                     </div>
                 </div>
                 <div class="brand-logo">
-                        <img src="images/logo.jpg" alt="Kishori Travels Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:18px;font-weight:700;color:#0b2a3e;>KT</span>';" />
-                    </div>
-                
+                    <img src="images/logo.jpg" alt="Kishori Travels Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:20px;font-weight:700;color:#0b2a3e;>KT</span>';" />
+                </div>
             </div>
 
             <!-- INVOICE TITLE -->
@@ -595,7 +438,7 @@
                 </div>
                 <div>
                     <h4><i class="fas fa-route"></i> TRIP DETAILS</h4>
-                    <div class="trip-line"><span>Booking ID</span><span  id="previewBookingId">BKG-0000</span></div>
+                    <div class="trip-line"><span>Booking ID</span><span id="previewBookingId">BKG-0000</span></div>
                     <div class="trip-line"><span>Travel Date</span><span><span id="previewDateFrom">15/06/2026</span> to <span id="previewDateTo">21/06/2026</span></span></div>
                     <div class="trip-line"><span>Travelers</span><span id="previewTravelers"></span></div>
                     <div class="trip-line"><span>Pickup</span><span id="previewPickup">Delhi</span></div>
@@ -620,6 +463,7 @@
 
             <!-- PAYMENT -->
             <div class="payment-grid" id="paymentGrid">
+                <!-- PAYMENT SUMMARY - Only visible for Online -->
                 <div id="summaryColumn">
                     <h4>PAYMENT SUMMARY</h4>
                     <div class="summary-line"><span>Package Cost</span><span id="previewPkgCost">₹0.00</span></div>
@@ -630,23 +474,28 @@
                     <div class="summary-line"><span>Advance Received</span><span id="previewAdvance">₹0.00</span></div>
                     <div class="summary-line balance"><span>Balance Due</span><span class="balance-due" id="previewBalance">₹0.00</span></div>
                 </div>
+                <!-- PAYMENT METHOD - Always visible -->
                 <div>
                     <h4>PAYMENT METHOD</h4>
+                    <!-- Online Payment Method -->
                     <div id="previewPaymentMethod">
-                        <div style="font-weight:500; font-size:11px;" id="previewUPI">UPI: </div>
-                        <div style="background:#eef5fa; padding:0.2rem 0.6rem; border-radius:30px; margin:3px 0; font-size:10px;" id="previewBankDetails">
-                            <span id="previewBankName"></span><br>
+                        <div style="font-weight:500; font-size:12px;" id="previewUPI">UPI: </div>
+                        <div style="background:#eef5fa; padding:0.3rem 0.8rem; border-radius:30px; margin:4px 0; font-size:11px;" id="previewBankDetails">
+                           Bank: <span id="previewBankName"></span><br>
                             A/C: <span id="previewAccountNo"></span><br>
                             IFSC: <span id="previewIFSC"></span>
                         </div>
-                        <div style="margin-top:2px; font-size:9px; color:#1a4057;">
+                        <div style="margin-top:2px; font-size:10px; color:#1a4057;">
                             <span class="gst-badge"><i class="fas fa-percent"></i> GST: <span id="previewGSTRateDisplay">18</span>%</span>
                         </div>
                     </div>
-                    <div id="previewCashMethod" class="cash-payment" style="display:none;">
-                        <i class="fas fa-money-bill-wave"></i> Cash Payment
+                    <!-- Cash Payment Method -->
+                    <div id="previewCashMethod" style="display:none;">
+                        <div class="cash-payment">
+                            <i class="fas fa-money-bill-wave"></i> Cash Payment: <span id="previewCashAmount">₹0.00</span>
+                        </div>
                     </div>
-                    <div style="margin-top:3px;"><span class="payment-status" id="previewPaymentStatus"><i class="fas fa-clock"></i> Partially Paid</span></div>
+                    <div style="margin-top:4px;"><span class="payment-status" id="previewPaymentStatus"><i class="fas fa-clock"></i> Partially Paid</span></div>
                 </div>
             </div>
 
@@ -678,6 +527,7 @@
         { desc: '', qty: '', rate: 0, amount: 0 },
     ];
 
+    // DOM REFS
     const edtCustomer = document.getElementById('edtCustomer');
     const edtPhone = document.getElementById('edtPhone');
     const edtEmail = document.getElementById('edtEmail');
@@ -736,6 +586,7 @@
     const previewPaymentStatus = document.getElementById('previewPaymentStatus');
     const previewPaymentMethod = document.getElementById('previewPaymentMethod');
     const previewCashMethod = document.getElementById('previewCashMethod');
+    const previewCashAmount = document.getElementById('previewCashAmount');
     const previewBookingId = document.getElementById('previewBookingId');
     const previewGSTRateLabel = document.getElementById('previewGSTRateLabel');
     const previewGSTAmount = document.getElementById('previewGSTAmount');
@@ -785,17 +636,22 @@
         if (paymentType === 'online') {
             onlineFields.classList.remove('hidden');
             cashFields.classList.add('hidden');
-            summaryColumn.classList.remove('summary-column-hidden');
+            summaryColumn.classList.remove('payment-summary-hidden');
+            previewPaymentMethod.style.display = 'block';
+            previewCashMethod.style.display = 'none';
         } else {
             onlineFields.classList.add('hidden');
             cashFields.classList.remove('hidden');
-            summaryColumn.classList.add('summary-column-hidden');
+            summaryColumn.classList.add('payment-summary-hidden');
+            previewPaymentMethod.style.display = 'none';
+            previewCashMethod.style.display = 'block';
         }
         updatePreview();
     }
 
     function renderItemEditor() {
         itemsContainer.innerHTML = '';
+        const travelers = getTravelers();
         items.forEach((item, index) => {
             const row = document.createElement('div');
             row.className = 'item-row';
@@ -803,7 +659,7 @@
                 <div class="edit-field"><input class="item-desc" value="${item.desc}" placeholder="Description" /></div>
                 <div class="edit-field"><input class="item-qty" value="${item.qty}" placeholder="Qty" /></div>
                 <div class="edit-field"><input class="item-rate" type="number" value="${item.rate}" placeholder="Rate/Person" step="1" /></div>
-                <div class="edit-field"><input class="item-total" type="text" value="${currency(item.amount * getTravelers())}" readonly style="background:#eef3f8; cursor:not-allowed; text-align:center;" /></div>
+                <div class="edit-field"><input class="item-total" type="text" value="${currency(item.rate * travelers)}" readonly style="background:#eef3f8; cursor:not-allowed; text-align:center;" /></div>
                 <button class="remove-item" data-index="${index}"><i class="fas fa-times"></i></button>
             `;
             itemsContainer.appendChild(row);
@@ -829,7 +685,7 @@
         const travelers = getTravelers();
         rows.forEach(row => {
             const desc = row.querySelector('.item-desc').value || '';
-            const qty = row.querySelector('.item-qty').value || '0';
+            const qty = row.querySelector('.item-qty').value || '';
             const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
             newItems.push({ desc, qty, rate, amount: rate });
             const totalField = row.querySelector('.item-total');
@@ -866,12 +722,12 @@
         const travelers = getTravelers();
         const pickup = edtPickup.value || '';
         const room = edtRoom.value || '';
-        const invNo = edtInvoiceNo.value || '';
+        const invNo = edtInvoiceNo.value || 'INV-0000';
         const invDate = formatDate(edtInvoiceDate.value);
         const dueDate = formatDate(edtDueDate.value);
         const advance = parseFloat(edtAdvance.value) || 0;
         const discountPercent = parseFloat(edtDiscount.value) || 0;
-        const bookingId = edtBookingId.value || '';
+        const bookingId = edtBookingId.value || 'BKG-0000';
 
         const paymentType = edtPaymentType.value;
         const upi = edtUPI.value || '';
@@ -896,6 +752,7 @@
         previewDueDate.textContent = dueDate;
         previewBookingId.textContent = bookingId;
 
+        // TABLE - Calculate with travelers
         previewItemsBody.innerHTML = '';
         let total = 0;
         items.forEach(item => {
@@ -904,10 +761,10 @@
             total += totalAmount;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="padding:0.2rem 0.4rem; font-weight:500; text-align:left;">${item.desc}</td>
-                <td style="padding:0.2rem 0.4rem; text-align:center;">${item.qty}</td>
-                <td style="padding:0.2rem 0.4rem; text-align:center;">${currency(perPerson)}</td>
-                <td style="padding:0.2rem 0.4rem; text-align:center;">${currency(totalAmount)}</td>
+                <td style="padding:0.3rem 0.6rem; font-weight:500; text-align:left;">${item.desc}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${item.qty}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${currency(perPerson)}</td>
+                <td style="padding:0.3rem 0.6rem; text-align:center;">${currency(totalAmount)}</td>
             `;
             previewItemsBody.appendChild(tr);
         });
@@ -923,24 +780,21 @@
         previewNet.textContent = currency(net);
         previewAdvance.textContent = currency(advance);
         previewBalance.textContent = currency(balance);
+
         previewGSTRateLabel.textContent = gstRate;
         previewGSTAmount.textContent = currency(gstAmount);
         previewTotalWithGST.textContent = currency(totalWithGST);
         previewGSTRateDisplay.textContent = gstRate;
 
-        if (paymentType === 'online') {
-            previewPaymentMethod.style.display = 'block';
-            previewCashMethod.style.display = 'none';
-            previewUPI.textContent = upi ? `UPI: ${upi}` : 'UPI Id: ';
-            previewBankName.textContent = bankName;
-            previewAccountNo.textContent = accountNo;
-            previewIFSC.textContent = ifsc;
-        } else {
-            previewPaymentMethod.style.display = 'none';
-            previewCashMethod.style.display = 'inline-block';
-            const cashAmt = parseFloat(cashAmount) || 0;
-            previewCashMethod.innerHTML = `<i class="fas fa-money-bill-wave"></i> Cash Payment: ${currency(cashAmt)}`;
-        }
+        // Update Cash amount in preview
+        const cashAmt = parseFloat(cashAmount) || 0;
+        previewCashAmount.textContent = currency(cashAmt);
+
+        // Update Online payment details
+        previewUPI.textContent = upi ? `UPI: ${upi}` : 'UPI Id: ';
+        previewBankName.textContent = bankName;
+        previewAccountNo.textContent = accountNo;
+        previewIFSC.textContent = ifsc;
 
         const statusIcon = paymentStatus === 'Paid' ? 'fa-check-circle' : 
                           paymentStatus === 'Unpaid' ? 'fa-times-circle' : 'fa-clock';
@@ -958,7 +812,7 @@
         edtAddress.value = '';
         edtDateFrom.value = '';
         edtDateTo.value = '';
-        edtTravelers.value = '0';
+        edtTravelers.value = '';
         edtPickup.value = '';
         edtRoom.value = '';
         edtInvoiceNo.value = '';
@@ -1026,10 +880,12 @@
         });
     }
 
+    // INIT
     renderItemEditor();
     togglePaymentFields();
     updatePreview();
 
+    // EVENTS - Auto update on travelers change
     edtTravelers.addEventListener('input', function() {
         updateItemTotals();
         updatePreview();
