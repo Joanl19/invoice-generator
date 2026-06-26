@@ -192,9 +192,9 @@
         #invoiceContent .invoice-title h2 { font-size: 18px; font-weight: 600; color: #0b2a3e; }
         #invoiceContent .invoice-title .meta { font-size: 11px; display: flex; gap: 1.2rem; color: #1e3b4e; }
         #invoiceContent .invoice-title .meta span { font-weight: 600; }
-        #invoiceContent .-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #f9fcff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin-bottom: 0.8rem; }
-        #invoiceContent .-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
-        #invoiceContent .-grid .customer-name { font-weight: 600; font-size: 14px; color: #0b2a3e; }
+        #invoiceContent .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; background: #f9fcff; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid #e2ebf3; margin-bottom: 0.8rem; }
+        #invoiceContent .info-grid h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #3a637b; border-bottom: 1px dashed #cddce8; padding-bottom: 0.2rem; margin-bottom: 0.3rem; }
+        #invoiceContent .info-grid .customer-name { font-weight: 600; font-size: 14px; color: #0b2a3e; }
         #invoiceContent .info-grid .detail-line { font-size: 11px; padding: 2px 0; color: #1e3b4e; }
         #invoiceContent .info-grid .trip-line { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; border-bottom: 1px solid #e5eef7; }
         #invoiceContent .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #e3edf5; margin: 0.6rem 0; }
@@ -248,7 +248,7 @@
         .brand-logo {
             width: 55px;
             height: 55px;
-            border-radius: 20%;
+            border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
             border: 2px solid #0b2a3e;
@@ -293,16 +293,6 @@
             display: inline-block;
         }
         
-        .booking-id-badge {
-            background: #0b2a3e;
-            color: white;
-            padding: 0.1rem 0.8rem;
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
         /* Hide ONLY payment summary column, NOT the entire payment grid */
         .summary-column-hidden { display: none !important; }
     </style>
@@ -416,7 +406,7 @@
                     </div>
                     <div>
                         <h1>KISHORI TRAVELS</h1>
-                        <div class="tagline"><i class="fas fa-location-dot"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
+                        <div class="tagline"><i class="fas fa-map-pin"></i> Zero Number Rd, Anand Gram, Ghitorni, New Delhi 110030</div>
                     </div>
                 </div>
                 <div class="company-details">
@@ -431,7 +421,7 @@
             <div class="invoice-title">
                 <h2><i class="fas fa-file-invoice"></i> INVOICE</h2>
                 <div class="meta">
-                    <div><span>Invoice No. :</span> <span id="previewInvoiceNo">INV-2048</span></div>
+                    <div><span>Invoice No.:</span> <span id="previewInvoiceNo">INV-2048</span></div>
                     <div><span>Date:</span> <span id="previewInvoiceDate">05/06/2026</span></div>
                     <div><span>Due:</span> <span id="previewDueDate">12/06/2026</span></div>
                 </div>
@@ -448,7 +438,7 @@
                 </div>
                 <div>
                     <h4><i class="fas fa-route"></i> TRIP DETAILS</h4>
-                    <div class="trip-line"><span>Booking ID</span><span  id="previewBookingId"></span></div>
+                    <div class="trip-line"><span>Booking ID</span><span class="booking-id-badge" id="previewBookingId"><i class=""></i> BKG-0000</span></div>
                     <div class="trip-line"><span>Travel Date</span><span><span id="previewDateFrom">15/06/2026</span> to <span id="previewDateTo">21/06/2026</span></span></div>
                     <div class="trip-line"><span>Travelers</span><span id="previewTravelers">2 Adults</span></div>
                     <div class="trip-line"><span>Pickup</span><span id="previewPickup">Delhi</span></div>
@@ -490,7 +480,7 @@
                     <div id="previewPaymentMethod">
                         <div style="font-weight:500; font-size:12px;" id="previewUPI">UPI: </div>
                         <div style="background:#eef5fa; padding:0.3rem 0.8rem; border-radius:30px; margin:4px 0; font-size:11px;" id="previewBankDetails">
-                           Bank: <span id="previewBankName"></span><br>
+                            <span id="previewBankName"></span><br>
                             A/C: <span id="previewAccountNo"></span><br>
                             IFSC: <span id="previewIFSC"></span>
                         </div>
@@ -519,7 +509,8 @@
                 <div>
                     <i class="fas fa-headset"></i> +91 9540680005 &nbsp;|&nbsp;
                     <i class="fas fa-globe"></i> www.kishoritravels.com &nbsp;|&nbsp;
-                    <i class="fas fa-envelope"></i> kishoritravel@gmail.com
+                    <i class="fas fa-envelope"></i>  kishoritravel@gmail.com
+
                 </div>
                 <div style="font-weight:500;">Thank You!</div>
             </div>
@@ -723,7 +714,7 @@
         previewInvoiceNo.textContent = invNo;
         previewInvoiceDate.textContent = invDate;
         previewDueDate.textContent = dueDate;
-        previewBookingId.innerHTML = `<i class=""></i> ${bookingId}`;
+        previewBookingId.innerHTML = `${bookingId}`;
 
         // TABLE
         previewItemsBody.innerHTML = '';
@@ -762,7 +753,7 @@
         if (paymentType === 'online') {
             previewPaymentMethod.style.display = 'block';
             previewCashMethod.style.display = 'none';
-            previewUPI.textContent = upi ? `UPI: ${upi}` : 'UPI Id: ';
+            previewUPI.textContent = upi ? `UPI: ${upi}` : 'UPI: ';
             previewBankName.textContent = bankName;
             previewAccountNo.textContent = accountNo;
             previewIFSC.textContent = ifsc;
